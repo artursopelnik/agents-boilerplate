@@ -1,6 +1,8 @@
 # Agents Boilerplate
 
-**Write your agent instructions once and every agent reads them: the same MCP tools everywhere, and Graft, ponytail, and Caveman required, not optional. Graft alone reports up to 4× cheaper and 3× faster agent runs in its own published benchmark.**
+**Write your agent instructions once and every agent reads them: the same MCP tools everywhere, and Graft, ponytail, and Caveman required, not optional. Graft alone reports up to 4× cheaper and 3× faster agent runs in its own published benchmark. Caveman reports 33.2% fewer provider-reported input tokens in a pinned, 54-run Claude Code benchmark.**
+
+*Keep your agent. Brain big. Context small.*
 
 A small, opinionated boilerplate for repositories built with AI coding agents: Claude Code, GitHub Copilot, Cursor, Codex, Gemini CLI, Windsurf, and every other AGENTS.md-aware or MCP-capable agent.
 
@@ -8,7 +10,7 @@ A small, opinionated boilerplate for repositories built with AI coding agents: C
 
 * **One source of truth:** `AGENTS.md` is the canonical instruction file. Agent specific files are symlinked to it, so instructions never drift.
 * **Consistent MCP tooling:** One `.mcp.json` provides the same `filesystem`, `git`, and `graft` tools across MCP capable agents, fetched on demand via `npx`/`uvx`, no global installs required. VS Code's config is generated automatically.
-* **Token efficient by default:** [Caveman](https://github.com/JuliusBrussee/caveman), [Graft](https://github.com/trailhq/Graft), and [ponytail](https://github.com/dietrichgebert/ponytail) are required plugins, not a suggestions list. They reduce noise, improve codebase context, and keep changes minimal. Graft's own benchmark (162 controlled runs) reports +42% token savings, +46% fewer tool calls, and +60% time savings.
+* **Token efficient by default:** [Caveman](https://github.com/JuliusBrussee/caveman), [Graft](https://github.com/trailhq/Graft), and [ponytail](https://github.com/dietrichgebert/ponytail) are required plugins, not a suggestions list. They reduce noise, improve codebase context, and keep changes minimal. Graft's own benchmark (162 controlled runs) reports +42% token savings, +46% fewer tool calls, and +60% time savings; Caveman's own benchmark reports 33.2% fewer provider-reported input tokens across 54 pinned Claude Code runs, with all 18 exact-answer checks still passing.
 * **Accessibility from the start:** [A11Y.md](https://github.com/fecarrico/A11Y.md) provides an 18 rule AI behavioral contract for validating UI changes.
 
 ## The Idea
