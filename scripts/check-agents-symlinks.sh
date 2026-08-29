@@ -1,6 +1,7 @@
 #!/usr/bin/env bash
-# Verifies every symlink listed in .agents/manifest.txt exists, points at the
-# expected target, and resolves to a real file. Run manually or from CI.
+# Verifies every symlink listed in .agents/manifest.txt (agent instruction
+# files and same-schema config files, e.g. .cursor/mcp.json) exists, points
+# at the expected target, and resolves to a real file. Run manually or from CI.
 set -euo pipefail
 
 repo_root="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"

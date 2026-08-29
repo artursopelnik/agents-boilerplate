@@ -15,6 +15,7 @@ graft/
 
 # editor / OS
 .DS_Store
-.vscode/
+.vscode/*
+!.vscode/mcp.json
 .idea/
 *.log

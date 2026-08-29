@@ -15,6 +15,7 @@ symlink has to live there, not in here.
 | GitHub Copilot | `/.github/copilot-instructions.md` | `../AGENTS.md` |
 | Gemini CLI | `/GEMINI.md` | `AGENTS.md` |
 | Codex, Cursor, Amp, Jules, ... | `/AGENTS.md` (native) | — no symlink needed |
+| Cursor (MCP servers) | `/.cursor/mcp.json` | `../.mcp.json` |
 
 `manifest.txt` in this directory is the machine-readable version of that table.
 `scripts/check-agents-symlinks.sh` reads it in CI to make sure none of the symlinks
@@ -30,3 +31,17 @@ have drifted — turned into a real file, gone stale, or been deleted.
    On Windows, symlink support requires Developer Mode or an elevated shell plus
    `git config core.symlinks true`; without it, checkouts may materialize these as
    plain text files containing the link path instead of real symlinks.
+
+## MCP servers: same idea, one exception
+
+[`.mcp.json`](../.mcp.json) at the repo root is the canonical MCP server config
+(`filesystem`, `git`). Claude Code and Cursor both read the same `mcpServers`
+schema — Cursor's `.cursor/mcp.json` is just a symlink, tracked in the table and
+manifest above like any other agent file.
+
+VS Code doesn't fit the symlink trick: its `.vscode/mcp.json` uses a different
+schema (`servers` key instead of `mcpServers`, and an explicit `type` per server
+instead of inferring it). That file is *generated*, not symlinked —
+`scripts/sync-mcp-configs.sh` regenerates it from `.mcp.json`, and
+`scripts/sync-mcp-configs.sh --check` (run in CI) fails the build if it's out of
+sync. Add or edit servers in `.mcp.json` only, then run the sync script.
