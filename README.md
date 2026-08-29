@@ -22,9 +22,11 @@ step 3: merge into what you have instead of writing from scratch. Don't run
 multiple instruction files that say different things: your agent only reads
 one of them, and drift between them is how a boilerplate rots.
 
-## Step 1: Install the plugins
+## Step 1: Install the plugins (once per machine)
 
-Three plugins this recipe assumes are active, not optional extras:
+Three plugins this recipe assumes are active, not optional extras. Install
+them once, globally; they then work for every project, not just this one.
+Already have them? Skip straight to step 2.
 
 | Plugin | What it does | Install |
 | --- | --- | --- |
@@ -32,33 +34,22 @@ Three plugins this recipe assumes are active, not optional extras:
 | [**ponytail**](https://github.com/dietrichgebert/ponytail) | Pushes agents down a "does this need to exist -> already in the codebase -> stdlib -> native feature -> one-liner -> build the minimum" decision ladder, so generated code stays small. | Per agent, e.g. Claude Code: `/plugin marketplace add DietrichGebert/ponytail` then `/plugin install ponytail@ponytail`. See [ponytail's README](https://github.com/dietrichgebert/ponytail) for other agents. |
 | [**Caveman**](https://github.com/JuliusBrussee/caveman) | Compresses agent *prose*, not code, into terse, technically exact fragments. Cuts chat/output tokens without touching code or commands. | `npm install -g @caveman-ai/cli && caveman setup --install <agent>`, where `<agent>` is `claude`, `codex`, `gemini`, `aider`, `opencode`, `hermes`, or `openclaw`. |
 
-If your agent talks MCP and you want Graft's tools available inside the
-agent (not just its CLI), add this to whatever MCP config your agent reads
-(`.mcp.json` for Claude Code and Cursor, `.vscode/mcp.json` for VS Code with
-its `servers`/`type` schema):
+## Step 2: Enter your project, run `graft init` (once per repo)
 
-```json
-{
-  "mcpServers": {
-    "graft": {
-      "command": "npx",
-      "args": ["-y", "@nanonets/graft", "mcp"]
-    }
-  }
-}
-```
+ponytail and Caveman patch your agent itself, so once step 1 is done they're
+already active in every project you open, this one included, nothing more
+to do for those two.
 
-This is optional. `graft init` in step 2 works from the CLI alone.
-
-## Step 2: Run `graft init`
+Graft is the one exception: its codebase map is repo specific, so it needs
+building once per repo:
 
 ```bash
 graft init
 ```
 
-This builds the codebase graph Graft's tools and CLI read from. Without it,
-Graft has nothing to answer from. Re-run it after large refactors; add
-`graft/` to `.gitignore` since it's regenerable, not source of truth.
+Without this, Graft has nothing to answer from. Re-run it after large
+refactors; add `graft/` to `.gitignore` since it's regenerable, not source
+of truth.
 
 ## Step 3: Write your agent's instructions file
 
