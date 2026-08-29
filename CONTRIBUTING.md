@@ -17,12 +17,12 @@ that first if you're wiring up an AI coding agent.
 ## Optional plugins
 
 Independent, drop-in tools that make agents better at *this specific* job.
-None of them are required, and none are vendored in this repo: install what's
-useful.
+None of them are vendored in this repo, and none of their CLIs are installed
+by default: install what's useful.
 
 | Plugin | What it does | Link |
 | --- | --- | --- |
-| **Graft** | Builds a markdown map of the codebase (structure, call graphs, cross-file relationships) so agents get accurate contextual understanding without re-reading the whole tree. `graft init` wires it into Claude Code, Cursor, Codex, Gemini and others, and writes its own hook into `AGENTS.md`. | [trailhq/Graft](https://github.com/trailhq/Graft) |
+| **Graft** | Builds a markdown map of the codebase (structure, call graphs, cross-file relationships) so agents get accurate contextual understanding without re-reading the whole tree. Its MCP server is already wired into [`.mcp.json`](./.mcp.json) (see the "MCP Servers" section of [`README.md`](./README.md#mcp-servers)); run `graft init` once to build the graph it reads from. Graft's own published benchmark reports up to 4× cheaper and 3× faster agent runs, and, across 162 controlled runs, +42% token savings, +46% fewer tool calls, and +60% time savings. | [trailhq/Graft](https://github.com/trailhq/Graft) |
 | **ponytail** | Pushes agents down a "does this need to exist → already in the codebase → stdlib → native feature → one-liner → build the minimum" decision ladder, to keep generated code small and boring. | [dietrichgebert/ponytail](https://github.com/dietrichgebert/ponytail) |
 | **Caveman** | Compresses agent *prose*, not code, into terse, technically-exact fragments. Cuts chat/output tokens without touching code, commands, or error output. | [JuliusBrussee/caveman](https://github.com/JuliusBrussee/caveman) |
 

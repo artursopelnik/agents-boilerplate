@@ -15,6 +15,15 @@
         "mcp-server-git"
       ],
       "type": "stdio"
+    },
+    "graft": {
+      "command": "npx",
+      "args": [
+        "-y",
+        "@nanonets/graft",
+        "mcp"
+      ],
+      "type": "stdio"
     }
   }
 }

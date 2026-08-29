@@ -35,9 +35,9 @@ have drifted: turned into a real file, gone stale, or been deleted.
 ## MCP servers: same idea, one exception
 
 [`.mcp.json`](../.mcp.json) at the repo root is the canonical MCP server config
-(`filesystem`, `git`). Claude Code and Cursor both read the same `mcpServers`
-schema, so Cursor's `.cursor/mcp.json` is just a symlink, tracked in the table
-and manifest above like any other agent file.
+(`filesystem`, `git`, `graft`). Claude Code and Cursor both read the same
+`mcpServers` schema, so Cursor's `.cursor/mcp.json` is just a symlink, tracked
+in the table and manifest above like any other agent file.
 
 VS Code doesn't fit the symlink trick: its `.vscode/mcp.json` uses a different
 schema (`servers` key instead of `mcpServers`, and an explicit `type` per server

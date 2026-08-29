@@ -1,12 +1,14 @@
 # Agents Boilerplate
 
-A small, opinionated boilerplate for repositories built with AI coding agents: Claude Code, GitHub Copilot, Cursor, Codex, Gemini CLI, Windsurf, and whatever comes next.
+**Write your agent instructions once and every agent reads them: the same MCP tools everywhere, and dramatically fewer tokens burned. Graft alone reports up to 4× cheaper and 3× faster agent runs in its own published benchmark.**
+
+A small, opinionated boilerplate for repositories built with AI coding agents: Claude Code, GitHub Copilot, Cursor, Codex, Gemini CLI, Windsurf, and every other AGENTS.md-aware or MCP-capable agent.
 
 ## Features
 
 * **One source of truth:** `AGENTS.md` is the canonical instruction file. Agent specific files are symlinked to it, so instructions never drift.
-* **Consistent MCP tooling:** One `.mcp.json` provides the same `filesystem` and `git` tools across MCP capable agents. VS Code's config is generated automatically.
-* **Token efficient by default:** Optional [Caveman](https://github.com/JuliusBrussee/caveman), [Graft](https://github.com/trailhq/Graft), and [ponytail](https://github.com/dietrichgebert/ponytail) plugins reduce noise, improve codebase context, and keep changes minimal.
+* **Consistent MCP tooling:** One `.mcp.json` provides the same `filesystem`, `git`, and `graft` tools across MCP capable agents, fetched on demand via `npx`/`uvx`, no global installs required. VS Code's config is generated automatically.
+* **Token efficient by default:** Optional [Caveman](https://github.com/JuliusBrussee/caveman), [Graft](https://github.com/trailhq/Graft), and [ponytail](https://github.com/dietrichgebert/ponytail) plugins reduce noise, improve codebase context, and keep changes minimal. Graft's own benchmark (162 controlled runs) reports +42% token savings, +46% fewer tool calls, and +60% time savings.
 * **Accessibility from the start:** [A11Y.md](https://github.com/fecarrico/A11Y.md) provides an 18 rule AI behavioral contract for validating UI changes.
 
 ## The Idea
@@ -57,20 +59,21 @@ Tools that support `AGENTS.md` natively, such as Codex, Cursor, Amp, and Jules, 
 
 ## MCP Servers
 
-`.mcp.json` ships with two zero config servers:
+`.mcp.json` ships with three zero config servers, all fetched on demand via `npx`/`uvx`:
 
-| Server       | Provides                      |
-| ------------ | ----------------------------- |
-| `filesystem` | Repo scoped read/write access |
-| `git`        | Status, diff, log, and blame  |
+| Server       | Provides                                         |
+| ------------ | ------------------------------------------------- |
+| `filesystem` | Repo scoped read/write access                     |
+| `git`        | Status, diff, log, and blame                      |
+| `graft`      | A linked codebase map for accurate agent context  |
 
-Claude Code and Cursor read the config natively. VS Code uses a generated `.vscode/mcp.json` because its schema differs.
+Claude Code and Cursor read the config natively. VS Code uses a generated `.vscode/mcp.json` because its schema differs. `graft` still needs `graft init` run once to build the graph its tools read from.
 
 ## Optional Plugins
 
 | Plugin                                                      | Purpose                                                                       |
 | ------------------------------------------------------------ | ------------------------------------------------------------------------------ |
-| [**Graft**](https://github.com/trailhq/Graft)                | Gives agents accurate, linked codebase context without re reading everything. |
+| [**Graft**](https://github.com/trailhq/Graft)                | Gives agents accurate, linked codebase context without re reading everything. Already wired into `.mcp.json`; run `graft init` to build the graph it needs. |
 | [**ponytail**](https://github.com/dietrichgebert/ponytail)   | Encourages the smallest correct implementation.                               |
 | [**Caveman**](https://github.com/JuliusBrussee/caveman)      | Compresses agent output into terse, technically precise prose.                |
 
