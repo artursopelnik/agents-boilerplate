@@ -1,97 +1,97 @@
 # Agents Boilerplate
 
-**Write your agent instructions once and every agent reads them: the same MCP tools everywhere, and Graft, ponytail, and Caveman required, not optional. Graft alone reports up to 4× cheaper and 3× faster agent runs in its own published benchmark. Caveman reports 33.2% fewer provider-reported input tokens in a pinned, 54-run Claude Code benchmark.**
-
 *Keep your agent. Brain big. Context small.*
 
-A small, opinionated boilerplate for repositories built with AI coding agents: Claude Code, GitHub Copilot, Cursor, Codex, Gemini CLI, Windsurf, and every other AGENTS.md-aware or MCP-capable agent.
+This isn't a folder of files you copy in. It's a recipe: three steps that get
+any repo ready for AI coding agents (Claude Code, Cursor, Codex, Gemini CLI,
+GitHub Copilot, Windsurf, ...) without leaving behind a bloated instructions
+file that agents reload, and pay for, on every single turn.
 
-## Features
+Pick your path below, then follow the three steps.
 
-* **One source of truth:** `AGENTS.md` is the canonical instruction file. Agent specific files are symlinked to it, so instructions never drift.
-* **Consistent MCP tooling:** One `.mcp.json` provides the same `filesystem`, `git`, and `graft` tools across MCP capable agents, fetched on demand via `npx`/`uvx`, no global installs required. VS Code's config is generated automatically.
-* **Token efficient by default:** [Caveman](https://github.com/JuliusBrussee/caveman), [Graft](https://github.com/trailhq/Graft), and [ponytail](https://github.com/dietrichgebert/ponytail) are required plugins, not a suggestions list. They reduce noise, improve codebase context, and keep changes minimal. Graft's own benchmark (162 controlled runs) reports +42% token savings, +46% fewer tool calls, and +60% time savings; Caveman's own benchmark reports 33.2% fewer provider-reported input tokens across 54 pinned Claude Code runs, with all 18 exact-answer checks still passing.
-* **Accessibility from the start:** [A11Y.md](https://github.com/fecarrico/A11Y.md) provides an 18 rule AI behavioral contract for validating UI changes.
+## Path A: New project
 
-## The Idea
+Start from an empty repo (or reset the git history of a clone) and work
+through steps 1 to 3.
 
-Every coding agent has its own conventions for instructions. Maintaining multiple copies of the same rules inevitably leads to drift.
+## Path B: Existing project
 
-This boilerplate keeps **one canonical `AGENTS.md`** and symlinks agent specific files such as `CLAUDE.md`, `GEMINI.md`, and `.github/copilot-instructions.md` to it.
+You already have code, and maybe already have a `CLAUDE.md`, `AGENTS.md`, or
+`.github/copilot-instructions.md`. Same three steps, with one difference in
+step 3: merge into what you have instead of writing from scratch. Don't run
+multiple instruction files that say different things: your agent only reads
+one of them, and drift between them is how a boilerplate rots.
 
-Edit `AGENTS.md` once. Every agent gets the same instructions.
+## Step 1: Install the plugins
 
-Tools that support `AGENTS.md` natively, such as Codex, Cursor, Amp, and Jules, work without additional setup.
+Three plugins this recipe assumes are active, not optional extras:
 
-## Structure
+| Plugin | What it does | Install |
+| --- | --- | --- |
+| [**Graft**](https://github.com/trailhq/Graft) | Builds a linked map of the codebase (structure, call graphs, cross-file relationships) so agents get accurate context without re-reading the whole tree. Reports up to 4x cheaper, 3x faster runs in its own benchmark. | `npm install -g @nanonets/graft` |
+| [**ponytail**](https://github.com/dietrichgebert/ponytail) | Pushes agents down a "does this need to exist -> already in the codebase -> stdlib -> native feature -> one-liner -> build the minimum" decision ladder, so generated code stays small. | Per agent, e.g. Claude Code: `/plugin marketplace add DietrichGebert/ponytail` then `/plugin install ponytail@ponytail`. See [ponytail's README](https://github.com/dietrichgebert/ponytail) for other agents. |
+| [**Caveman**](https://github.com/JuliusBrussee/caveman) | Compresses agent *prose*, not code, into terse, technically exact fragments. Cuts chat/output tokens without touching code or commands. | `npm install -g @caveman-ai/cli && caveman setup --install <agent>`, where `<agent>` is `claude`, `codex`, `gemini`, `aider`, `opencode`, `hermes`, or `openclaw`. |
 
-```text
-.
-├── AGENTS.md                              # canonical instructions
-├── CONTRIBUTING.md                        # onboarding, plugins, roadmap
-├── CLAUDE.md -> AGENTS.md                 # Claude Code
-├── GEMINI.md -> AGENTS.md                 # Gemini CLI
-├── .mcp.json                              # canonical MCP config
-├── .cursor/
-│   └── mcp.json -> ../.mcp.json           # Cursor
-├── .vscode/
-│   └── mcp.json                           # generated, do not edit
-├── .github/
-│   ├── copilot-instructions.md -> ../AGENTS.md
-│   └── workflows/
-│       ├── check-agents-symlinks.yml
-│       └── check-mcp-config.yml
-├── .agents/
-│   ├── README.md
-│   └── manifest.txt
-├── scripts/
-│   ├── check-agents-symlinks.sh
-│   └── sync-mcp-configs.sh
-├── LICENSE
-└── README.md
+If your agent talks MCP and you want Graft's tools available inside the
+agent (not just its CLI), add this to whatever MCP config your agent reads
+(`.mcp.json` for Claude Code and Cursor, `.vscode/mcp.json` for VS Code with
+its `servers`/`type` schema):
+
+```json
+{
+  "mcpServers": {
+    "graft": {
+      "command": "npx",
+      "args": ["-y", "@nanonets/graft", "mcp"]
+    }
+  }
+}
 ```
 
-## Quickstart
+This is optional. `graft init` in step 2 works from the CLI alone.
 
-1. **Use this repo as a template** or clone it and reset the Git history.
-2. **Edit `AGENTS.md`** with your project's overview, setup, build, test, lint commands, and coding conventions.
-3. **Leave the symlinks alone.** To add another agent, see [`.agents/README.md`](.agents/README.md).
-4. **Configure MCP servers** in `.mcp.json`, then run `scripts/sync-mcp-configs.sh`.
-5. **Install the required plugins** below and add [`A11Y.md`](https://github.com/fecarrico/A11Y.md). See [`CONTRIBUTING.md`](CONTRIBUTING.md) for exact commands.
+## Step 2: Run `graft init`
 
-### Existing projects
+```bash
+graft init
+```
 
-The steps above assume a fresh repo. Retrofitting one that already has code:
+This builds the codebase graph Graft's tools and CLI read from. Without it,
+Graft has nothing to answer from. Re-run it after large refactors; add
+`graft/` to `.gitignore` since it's regenerable, not source of truth.
 
-1. **Copy the boilerplate files in:** `AGENTS.md`, `CONTRIBUTING.md`, `.agents/`, `.mcp.json`, `.cursor/`, `.vscode/mcp.json`, the two workflows in `.github/workflows/`, and `scripts/`. Keep your own `LICENSE`.
-2. **Merge existing instructions first.** If you already have a `CLAUDE.md`, `.github/copilot-instructions.md`, or `GEMINI.md` with real content, fold it into `AGENTS.md`, then delete the original before turning it into a symlink. Don't symlink over content you haven't merged.
-3. **Merge `.gitignore` and `.mcp.json` by hand** if your project already has entries or MCP servers of its own. The scripts here check and regenerate, they don't merge.
-4. **Run the checks:** `scripts/check-agents-symlinks.sh` and `scripts/sync-mcp-configs.sh --check`.
-5. **Continue with steps 2 to 5 above:** edit `AGENTS.md`, configure MCP servers, install the required plugins.
+## Step 3: Write your agent's instructions file
 
-## MCP Servers
+Create the one file your agent actually reads: `CLAUDE.md` for Claude Code,
+`GEMINI.md` for Gemini CLI, `.github/copilot-instructions.md` for GitHub
+Copilot, `AGENTS.md` for Codex, Cursor, Amp, Jules and anything else that
+supports the open `AGENTS.md` convention, or something else entirely if your
+agent looks elsewhere. Check your agent's docs if you're not sure which
+filename it discovers automatically.
 
-`.mcp.json` ships with three zero config servers, all fetched on demand via `npx`/`uvx`:
+Keep it short. It's loaded on every turn, so every line in it is a
+standing cost, not a one-time one. Cover only:
 
-| Server       | Provides                                         |
-| ------------ | ------------------------------------------------- |
-| `filesystem` | Repo scoped read/write access                     |
-| `git`        | Status, diff, log, and blame                      |
-| `graft`      | A linked codebase map for accurate agent context  |
+- **Project overview**: one or two sentences, not a spec.
+- **Setup / build / test / lint commands**: the exact commands, nothing else.
+- **Code style rules that aren't obvious from the code itself.**
 
-Claude Code and Cursor read the config natively. VS Code uses a generated `.vscode/mcp.json` because its schema differs. `graft` still needs `graft init` run once to build the graph its tools read from.
+Existing project with content already in `CLAUDE.md`, `AGENTS.md`, or
+similar? Fold anything still true into this one file and delete the rest.
+Don't keep two instruction files with overlapping rules; they will drift.
 
-## Required Plugins
+Optional: if you want the same instructions picked up by more than one
+agent, a plain symlink (`ln -s AGENTS.md CLAUDE.md`) keeps them identical
+without copy-paste drift. Not required, just avoids duplication if you use
+several agents on the same repo.
 
-Not a menu, a contract: `AGENTS.md` assumes all three are installed.
+### Optional: accessibility
 
-| Plugin                                                      | Purpose                                                                       |
-| ------------------------------------------------------------ | ------------------------------------------------------------------------------ |
-| [**Graft**](https://github.com/trailhq/Graft)                | Gives agents accurate, linked codebase context without re reading everything. Already wired into `.mcp.json`; run `graft init` to build the graph it needs. |
-| [**ponytail**](https://github.com/dietrichgebert/ponytail)   | Encourages the smallest correct implementation.                               |
-| [**Caveman**](https://github.com/JuliusBrussee/caveman)      | Compresses agent output into terse, technically precise prose.                |
-
-See [`CONTRIBUTING.md`](CONTRIBUTING.md) for the exact install command per plugin and per agent.
+For UI work, point your instructions file at
+[A11Y.md](https://github.com/fecarrico/A11Y.md), an 18-rule AI behavioral
+contract mapped to WCAG 2.2 AA. Drop a copy into the repo root and add one
+line to your instructions file: "Follow every rule in `A11Y.md` before
+writing or editing any UI component."
 
 ## License
 
