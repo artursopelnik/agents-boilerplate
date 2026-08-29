@@ -1,40 +1,40 @@
 # Agents Boilerplate
 
 A small, open boilerplate for repositories meant to be worked on by AI coding
-agents — Claude Code, GitHub Copilot, Cursor, Codex, Gemini CLI, Windsurf, and
+agents: Claude Code, GitHub Copilot, Cursor, Codex, Gemini CLI, Windsurf, and
 whatever comes next.
 
 ## Features
 
-- **Cross-agent support** — one [`AGENTS.md`](https://agents.md/#examples) as
-  the shared instructions format, plus a [`.agents/`](./.agents) symlink layer
-  that keeps `CLAUDE.md`, `GEMINI.md` and `.github/copilot-instructions.md` in
-  sync automatically, with a CI check so they can't silently drift.
-- **Same MCP tool access everywhere** — one [`.mcp.json`](./.mcp.json) with
-  `filesystem` and `git` servers, read natively by Claude Code and (via
-  symlink) Cursor; a sync script generates the differently-shaped
-  `.vscode/mcp.json` that VS Code needs, checked in CI so it can't drift
-  either.
-- **Accessibility before the first prompt** —
-  [`A11Y.md`](https://github.com/fecarrico/A11Y.md)'s 18-rule AI behavioral
-  contract is wired in as the accessibility validation protocol every UI
-  change should pass, not a pass that happens after the fact.
-- **Token-efficient by default** — optional plugins
+- **Token-efficient by default**: optional plugins
   [Caveman](https://github.com/JuliusBrussee/caveman),
   [Graft](https://github.com/trailhq/Graft) and
   [ponytail](https://github.com/dietrichgebert/ponytail) cut chat output,
   give agents accurate codebase context, and keep generated code minimal.
+- **Cross-agent support**: one [`AGENTS.md`](https://agents.md/#examples) as
+  the shared instructions format, plus a [`.agents/`](./.agents) symlink layer
+  that keeps `CLAUDE.md`, `GEMINI.md` and `.github/copilot-instructions.md` in
+  sync automatically, with a CI check so they can't silently drift.
+- **Same MCP tool access everywhere**: one [`.mcp.json`](./.mcp.json) with
+  `filesystem` and `git` servers, read natively by Claude Code and (via
+  symlink) Cursor. A sync script generates the differently shaped
+  `.vscode/mcp.json` that VS Code needs, checked in CI so it can't drift
+  either.
+- **Accessibility before the first prompt**:
+  [`A11Y.md`](https://github.com/fecarrico/A11Y.md)'s 18-rule AI behavioral
+  contract is wired in as the accessibility validation protocol every UI
+  change should pass, not a pass that happens after the fact.
 
 ## The idea
 
-Every agent tool insists on its own instructions file: Claude Code wants
+Every agent tool insists on its own instructions file. Claude Code wants
 `CLAUDE.md`, GitHub Copilot wants `.github/copilot-instructions.md`, Gemini CLI
 wants `GEMINI.md`. Maintaining separate copies of the same instructions is how
 they quietly drift out of sync.
 
-This boilerplate keeps exactly **one** file of instructions —
+This boilerplate keeps exactly **one** file of instructions,
 [`AGENTS.md`](./AGENTS.md), the open format most newer tools (Codex, Cursor,
-Amp, Jules, ...) already read natively — and symlinks every legacy filename
+Amp, Jules, ...) already read natively, and symlinks every legacy filename
 back to it. Edit `AGENTS.md`; every agent sees the change immediately, and
 there's nothing to keep in sync by hand.
 
@@ -42,14 +42,15 @@ there's nothing to keep in sync by hand.
 
 ```
 .
-├── AGENTS.md                              # canonical instructions — edit this one
+├── AGENTS.md                              # canonical instructions, edit this one
+├── CONTRIBUTING.md                        # human onboarding, plugins, roadmap
 ├── CLAUDE.md -> AGENTS.md                 # Claude Code
 ├── GEMINI.md -> AGENTS.md                 # Gemini CLI
-├── .mcp.json                              # canonical MCP server config — edit this one
+├── .mcp.json                              # canonical MCP server config, edit this one
 ├── .cursor/
 │   └── mcp.json -> ../.mcp.json           # Cursor (same schema as Claude Code)
 ├── .vscode/
-│   └── mcp.json                           # generated — VS Code's schema differs, don't hand-edit
+│   └── mcp.json                           # generated, VS Code's schema differs, don't hand-edit
 ├── .github/
 │   ├── copilot-instructions.md -> ../AGENTS.md   # GitHub Copilot
 │   └── workflows/
@@ -57,7 +58,7 @@ there's nothing to keep in sync by hand.
 │       └── check-mcp-config.yml           # CI: fails if .vscode/mcp.json drifts
 ├── .agents/
 │   ├── README.md                          # how/why the symlink + sync layer works
-│   └── manifest.txt                       # machine-readable tool → file map
+│   └── manifest.txt                       # machine-readable tool to file map
 ├── scripts/
 │   ├── check-agents-symlinks.sh           # verifies manifest.txt against disk
 │   └── sync-mcp-configs.sh                # regenerates .vscode/mcp.json from .mcp.json
@@ -66,20 +67,20 @@ there's nothing to keep in sync by hand.
 ```
 
 Codex, Cursor, Amp, Jules and other tools that already read `AGENTS.md`
-natively need no symlink at all — they just work.
+natively need no symlink at all. They just work.
 
 ## Quickstart
 
 1. Use this repo as a template (or clone it and reset the git history).
-2. Edit [`AGENTS.md`](./AGENTS.md) — fill in the real project overview, setup,
+2. Edit [`AGENTS.md`](./AGENTS.md): fill in the real project overview, setup,
    build/test/lint commands, and code style.
 3. Leave the symlinks alone. If you add support for another agent tool, see
    [`.agents/README.md`](./.agents/README.md).
 4. Edit [`.mcp.json`](./.mcp.json) to add/remove MCP servers, then run
    `scripts/sync-mcp-configs.sh` so VS Code's config picks up the change too.
-5. Optionally install the plugins listed in `AGENTS.md` (Graft, ponytail,
-   Caveman) and/or drop in
-   [`A11Y.md`](https://github.com/fecarrico/A11Y.md) for accessibility.
+5. Optionally install the plugins listed below and/or drop in
+   [`A11Y.md`](https://github.com/fecarrico/A11Y.md) for accessibility. See
+   [`CONTRIBUTING.md`](./CONTRIBUTING.md) for details on both.
 
 ## MCP servers
 
@@ -90,11 +91,11 @@ AGENTS.md prose alone:
 | Server | Gives agents |
 | --- | --- |
 | `filesystem` | Read/write access scoped to the repo directory. |
-| `git` | Status, diff, log, blame — without shelling out. |
+| `git` | Status, diff, log, blame, without shelling out. |
 
 Claude Code and Cursor read `.mcp.json` (or its `.cursor/mcp.json` symlink)
 natively. VS Code needs a different schema, so `.vscode/mcp.json` is
-generated by `scripts/sync-mcp-configs.sh` — see
+generated by `scripts/sync-mcp-configs.sh`. See
 [`.agents/README.md`](./.agents/README.md#mcp-servers-same-idea-one-exception)
 for why that one file can't just be a symlink.
 
@@ -104,10 +105,10 @@ for why that one file can't just be a symlink.
 | --- | --- |
 | [**Graft**](https://github.com/trailhq/Graft) | Maps the codebase into linked markdown so agents get accurate context without re-reading everything. |
 | [**ponytail**](https://github.com/dietrichgebert/ponytail) | Nudges agents toward the smallest correct solution instead of the first one that works. |
-| [**Caveman**](https://github.com/JuliusBrussee/caveman) | Compresses agent chat output into terse, technically-exact prose — code and errors stay verbatim. |
+| [**Caveman**](https://github.com/JuliusBrussee/caveman) | Compresses agent chat output into terse, technically-exact prose. Code and errors stay verbatim. |
 
-See the "Optional plugins" section of [`AGENTS.md`](./AGENTS.md) for details.
+See [`CONTRIBUTING.md`](./CONTRIBUTING.md) for details.
 
 ## License
 
-MIT — see [`LICENSE`](./LICENSE).
+MIT, see [`LICENSE`](./LICENSE).

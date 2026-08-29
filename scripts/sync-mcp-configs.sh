@@ -4,7 +4,7 @@
 # Claude Code and Cursor both read the same `mcpServers` schema with the
 # transport type inferred from which keys are present, so .cursor/mcp.json
 # is just a symlink to .mcp.json. VS Code uses a different schema (`servers`
-# key, explicit `type` field), so its file has to be generated instead — see
+# key, explicit `type` field), so its file has to be generated instead. See
 # .agents/README.md.
 #
 # Usage:
@@ -27,7 +27,7 @@ jq '{
 
 if [[ "${1:-}" == "--check" ]]; then
   if [[ ! -f "$dest" ]] || ! diff -q "$dest" "$tmp" >/dev/null 2>&1; then
-    echo "FAIL: .vscode/mcp.json is out of sync with .mcp.json — run scripts/sync-mcp-configs.sh"
+    echo "FAIL: .vscode/mcp.json is out of sync with .mcp.json. Run scripts/sync-mcp-configs.sh"
     rm -f "$tmp"
     exit 1
   fi
