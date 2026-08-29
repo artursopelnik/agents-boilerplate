@@ -5,9 +5,10 @@
 > `GEMINI.md`, ...) is a symlink back to this file: edit this one file and every agent
 > sees the update. See [`.agents/README.md`](.agents/README.md) for how that works.
 >
-> Human-facing setup notes, the optional plugin list, and the project roadmap live in
-> [`CONTRIBUTING.md`](CONTRIBUTING.md) instead of here, so this file stays focused on
-> what an agent needs mid-task.
+> Human-facing setup notes and the project roadmap live in
+> [`CONTRIBUTING.md`](CONTRIBUTING.md). The plugins in "Required plugins" below are
+> part of this repo's contract, not a suggestions list; install commands are in
+> `CONTRIBUTING.md`.
 
 ## Project overview
 
@@ -36,9 +37,43 @@ npm install
 ## Code style
 
 - Match the conventions already used in the surrounding file before introducing new ones.
+- Before writing new code, walk ponytail's decision ladder: does this need to
+  exist, is it already in the codebase, is it in the standard library, is it
+  a native platform feature, can it be a one-liner, only then build the
+  minimum.
 - Prefer small, focused diffs over broad refactors.
 - No unused code, no dead branches, no speculative abstractions ("might need this later").
 - <!-- Add project-specific rules here: naming, imports, error handling, etc. -->
+
+## Writing style
+
+- No em dashes. Use a period, comma, or colon instead.
+- Avoid other stock AI tells: "not just X, but Y", "it's worth noting that",
+  hedging that doesn't change the answer, rule-of-three lists for their own
+  sake.
+- Plain, direct sentences over polished prose, in commit messages, docs,
+  comments, PR descriptions, and chat output. `README.md` is the one
+  exception; it's allowed to sell the project.
+
+## Required plugins
+
+This boilerplate is built around three plugins, not references to them. If
+one isn't active in your environment yet, that's a setup gap to fix, not an
+optional extra:
+
+- **ponytail**: its decision ladder is already embedded above in Code style,
+  so it's in effect the moment you read this file. Install the plugin itself
+  for its `/ponytail-review`, `/ponytail-audit`, and `/ponytail-debt`
+  commands.
+- **Graft**: its MCP server is already wired into `.mcp.json`. Run
+  `graft init` once to build the graph its tools read from; without that
+  step the tools return nothing.
+- **Caveman**: it changes how you write chat output, so it needs its own
+  install. If it isn't installed yet, say so to the user and keep responses
+  tight anyway.
+
+Exact install commands for all three, per agent, are in
+[`CONTRIBUTING.md`](CONTRIBUTING.md).
 
 ## Context budget
 
