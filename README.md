@@ -59,6 +59,16 @@ Tools that support `AGENTS.md` natively, such as Codex, Cursor, Amp, and Jules, 
 4. **Configure MCP servers** in `.mcp.json`, then run `scripts/sync-mcp-configs.sh`.
 5. **Install the required plugins** below and add [`A11Y.md`](https://github.com/fecarrico/A11Y.md). See [`CONTRIBUTING.md`](CONTRIBUTING.md) for exact commands.
 
+### Existing projects
+
+The steps above assume a fresh repo. Retrofitting one that already has code:
+
+1. **Copy the boilerplate files in:** `AGENTS.md`, `CONTRIBUTING.md`, `.agents/`, `.mcp.json`, `.cursor/`, `.vscode/mcp.json`, the two workflows in `.github/workflows/`, and `scripts/`. Keep your own `LICENSE`.
+2. **Merge existing instructions first.** If you already have a `CLAUDE.md`, `.github/copilot-instructions.md`, or `GEMINI.md` with real content, fold it into `AGENTS.md`, then delete the original before turning it into a symlink. Don't symlink over content you haven't merged.
+3. **Merge `.gitignore` and `.mcp.json` by hand** if your project already has entries or MCP servers of its own. The scripts here check and regenerate, they don't merge.
+4. **Run the checks:** `scripts/check-agents-symlinks.sh` and `scripts/sync-mcp-configs.sh --check`.
+5. **Continue with steps 2 to 5 above:** edit `AGENTS.md`, configure MCP servers, install the required plugins.
+
 ## MCP Servers
 
 `.mcp.json` ships with three zero config servers, all fetched on demand via `npx`/`uvx`:
