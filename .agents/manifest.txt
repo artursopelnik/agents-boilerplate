@@ -1,0 +1,4 @@
+# tool|symlink path (relative to repo root)|symlink target
+claude|CLAUDE.md|AGENTS.md
+copilot|.github/copilot-instructions.md|../AGENTS.md
+gemini|GEMINI.md|AGENTS.md

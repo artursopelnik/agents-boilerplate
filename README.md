@@ -1,0 +1,66 @@
+# Agents Boilerplate
+
+A small, open boilerplate for repositories meant to be worked on by AI coding
+agents — Claude Code, GitHub Copilot, Cursor, Codex, Gemini CLI, Windsurf, and
+whatever comes next.
+
+## The idea
+
+Every agent tool insists on its own instructions file: Claude Code wants
+`CLAUDE.md`, GitHub Copilot wants `.github/copilot-instructions.md`, Gemini CLI
+wants `GEMINI.md`. Maintaining separate copies of the same instructions is how
+they quietly drift out of sync.
+
+This boilerplate keeps exactly **one** file of instructions —
+[`AGENTS.md`](./AGENTS.md), the open format most newer tools (Codex, Cursor,
+Amp, Jules, ...) already read natively — and symlinks every legacy filename
+back to it. Edit `AGENTS.md`; every agent sees the change immediately, and
+there's nothing to keep in sync by hand.
+
+## Structure
+
+```
+.
+├── AGENTS.md                              # canonical instructions — edit this one
+├── CLAUDE.md -> AGENTS.md                 # Claude Code
+├── GEMINI.md -> AGENTS.md                 # Gemini CLI
+├── .github/
+│   ├── copilot-instructions.md -> ../AGENTS.md   # GitHub Copilot
+│   └── workflows/
+│       └── check-agents-symlinks.yml      # CI: fails if a symlink drifts
+├── .agents/
+│   ├── README.md                          # how/why the symlink layer works
+│   └── manifest.txt                       # machine-readable tool → file map
+├── scripts/
+│   └── check-agents-symlinks.sh           # verifies manifest.txt against disk
+├── LICENSE
+└── README.md
+```
+
+Codex, Cursor, Amp, Jules and other tools that already read `AGENTS.md`
+natively need no symlink at all — they just work.
+
+## Quickstart
+
+1. Use this repo as a template (or clone it and reset the git history).
+2. Edit [`AGENTS.md`](./AGENTS.md) — fill in the real project overview, setup,
+   build/test/lint commands, and code style.
+3. Leave the symlinks alone. If you add support for another agent tool, see
+   [`.agents/README.md`](./.agents/README.md).
+4. Optionally install the plugins listed in `AGENTS.md` (Graft, ponytail,
+   Caveman) and/or drop in
+   [`A11Y.md`](https://github.com/fecarrico/A11Y.md) for accessibility.
+
+## Optional plugins
+
+| Plugin | What it does |
+| --- | --- |
+| [**Graft**](https://github.com/trailhq/Graft) | Maps the codebase into linked markdown so agents get accurate context without re-reading everything. |
+| [**ponytail**](https://github.com/dietrichgebert/ponytail) | Nudges agents toward the smallest correct solution instead of the first one that works. |
+| [**Caveman**](https://github.com/JuliusBrussee/caveman) | Compresses agent chat output into terse, technically-exact prose — code and errors stay verbatim. |
+
+See the "Optional plugins" section of [`AGENTS.md`](./AGENTS.md) for details.
+
+## License
+
+MIT — see [`LICENSE`](./LICENSE).

@@ -1,0 +1,20 @@
+# dependencies
+node_modules/
+
+# build output
+dist/
+build/
+
+# env / secrets
+.env
+.env.*
+!.env.example
+
+# graft's regenerable local codebase graph (see AGENTS.md > Optional plugins)
+graft/
+
+# editor / OS
+.DS_Store
+.vscode/
+.idea/
+*.log
