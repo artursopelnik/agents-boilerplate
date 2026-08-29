@@ -4,6 +4,22 @@ A small, open boilerplate for repositories meant to be worked on by AI coding
 agents — Claude Code, GitHub Copilot, Cursor, Codex, Gemini CLI, Windsurf, and
 whatever comes next.
 
+## Features
+
+- **Cross-agent support** — one [`AGENTS.md`](https://agents.md/#examples) as
+  the shared instructions format, plus a [`.agents/`](./.agents) symlink layer
+  that keeps `CLAUDE.md`, `GEMINI.md` and `.github/copilot-instructions.md` in
+  sync automatically, with a CI check so they can't silently drift.
+- **Accessibility before the first prompt** —
+  [`A11Y.md`](https://github.com/fecarrico/A11Y.md)'s 18-rule AI behavioral
+  contract is wired in as the accessibility validation protocol every UI
+  change should pass, not a pass that happens after the fact.
+- **Token-efficient by default** — optional plugins
+  [Caveman](https://github.com/JuliusBrussee/caveman),
+  [Graft](https://github.com/trailhq/Graft) and
+  [ponytail](https://github.com/dietrichgebert/ponytail) cut chat output,
+  give agents accurate codebase context, and keep generated code minimal.
+
 ## The idea
 
 Every agent tool insists on its own instructions file: Claude Code wants
