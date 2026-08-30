@@ -10,12 +10,11 @@ build/
 .env.*
 !.env.example
 
-# graft's regenerable local codebase graph (see AGENTS.md > Optional plugins)
+# graft's regenerable local codebase graph (see README.md > Step 2)
 graft/
 
 # editor / OS
 .DS_Store
-.vscode/*
-!.vscode/mcp.json
+.vscode/
 .idea/
 *.log
